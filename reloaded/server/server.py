@@ -78,8 +78,6 @@ def debug():
         <head>
             <title></title>
             <meta charset="utf-8" />
-            <link data-reloaded-path="/home/dbsr/src/reloaded/reloaded/server/assets/style.css" rel="stylesheet" href="/reloaded/style.css">
-            <link rel="stylesheet" href="/reloaded/css/style3.css">
         </head>
         <body>
             <script id="reloaded-script" rel="text/javascript" src="http://localhost:9000/reloaded/reloaded.js"></script>
