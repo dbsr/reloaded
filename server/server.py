@@ -10,11 +10,11 @@ from flask import Flask, send_file, Response, request
 
 app = Flask(__name__)
 
-app.vimfox = {}
+app.reloaded = {}
 
 
-@app.route('/vimfox/<path:filename>')
-def send_vimfox_file(filename):
+@app.route('/reloaded/<path:filename>')
+def send_reloaded_file(filename):
     app.logger.info(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'assets', filename))
     try:
         return send_file(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'assets', filename))
@@ -22,7 +22,7 @@ def send_vimfox_file(filename):
         return Response(':(', status=404)
 
 
-class VimFoxNamespace(BaseNamespace):
+class ReloadedNamespace(BaseNamespace):
     sockets = {}
 
     def initialize(self):
@@ -40,15 +40,15 @@ class VimFoxNamespace(BaseNamespace):
         if id(self) in self.sockets:
             del self.sockets[id(self)]
             self.emit('disconnect')
-        app.vimfox['ready'] = True
+        app.reloaded['ready'] = True
 
     def on_settings(self):
         self.log("processing settings request.")
-        self.emit("settings", {"debug_mode": app.debug, "hide_status": app.vimfox['hide_status']})
+        self.emit("settings", {"debug_mode": app.debug, "hide_status": app.reloaded['hide_status']})
 
     def on_watch_files(self, files):
         self.log("new watch files: " + ", ".join(files))
-        app.vimfox['watch_files'] = files
+        app.reloaded['watch_files'] = files
         init_watch()
 
         return True
@@ -63,7 +63,7 @@ class VimFoxNamespace(BaseNamespace):
 @app.route('/socket.io/<path:remaining>')
 def socketio(remaining):
     try:
-        socketio_manage(request.environ, {'/ws': VimFoxNamespace}, request)
+        socketio_manage(request.environ, {'/ws': ReloadedNamespace}, request)
     except:
         app.logger.error("Socket Error.", exc_info=True)
 
@@ -78,11 +78,11 @@ def debug():
         <head>
             <title></title>
             <meta charset="utf-8" />
-            <link data-vimfox-path="/home/dbsr/src/vimfox/vimfox/server/assets/style.css" rel="stylesheet" href="/vimfox/style.css">
-            <link rel="stylesheet" href="/vimfox/css/style3.css">
+            <link data-reloaded-path="/home/dbsr/src/reloaded/reloaded/server/assets/style.css" rel="stylesheet" href="/reloaded/style.css">
+            <link rel="stylesheet" href="/reloaded/css/style3.css">
         </head>
         <body>
-            <script id="vimfox-script" rel="text/javascript" src="http://localhost:9000/vimfox/vimfox_standalone.js"></script>
+            <script id="reloaded-script" rel="text/javascript" src="http://localhost:9000/reloaded/reloaded_standalone.js"></script>
         </body>
         </html>""")
 
@@ -96,7 +96,7 @@ def init_watch():
         t_event.set()
     except:
         pass
-    if not app.vimfox['watch_files']:
+    if not app.reloaded['watch_files']:
         return
     t_event = threading.Event()
     t = threading.Thread(target=watch, args=(t_event,))
@@ -106,13 +106,13 @@ def init_watch():
 def watch(stop_event):
     mtimes = {}
     while not stop_event.is_set():
-        for f in app.vimfox['watch_files']:
+        for f in app.reloaded['watch_files']:
             if not os.path.exists(f):
                 print "could not stat: {!r}.".format(f)
                 continue
             old_mtime = mtimes.get(f)
             new_mtime = os.stat(f).st_mtime
             if old_mtime and old_mtime != new_mtime:
-                VimFoxNamespace.socketio_send('reload', f)
+                ReloadedNamespace.socketio_send('reload', f)
             mtimes[f] = os.stat(f).st_mtime
         stop_event.wait(1)

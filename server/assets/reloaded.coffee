@@ -1,4 +1,4 @@
-### vimfox_standalone.js ~ initiates websocket / reload script ###
+### reloaded_standalone.js ~ initiates websocket / reload script ###
 namespace = (target, name, block) ->
   [target, name, block] = [(if typeof exports isnt 'undefined' then exports else window), arguments...] if arguments.length < 3
   top    = target
@@ -6,63 +6,63 @@ namespace = (target, name, block) ->
   block target, top
 
 window.onload = ->
-  vimfox.init()
+  reloaded.init()
 
-namespace 'vimfox', (exports) ->
-  vimfox.globals =
+namespace 'reloaded', (exports) ->
+  reloaded.globals =
     RELOAD_PAGE: 0
     RELOAD_FILE: 1
     host: null
-  vimfox.files = {}
-  vimfox.init = ->
+  reloaded.files = {}
+  reloaded.init = ->
     # create the status element
-    vimfox.status = new vimfox.Status()
+    reloaded.status = new reloaded.Status()
 
-    # get vimfox host information
-    vimfox.globals.host = document.getElementById('vimfox-script')
-      .getAttribute('src').replace(/\/vimfox\/vimfox_standalone.js/, '')
+    # get reloaded host information
+    reloaded.globals.host = document.getElementById('reloaded-script')
+      .getAttribute('src').replace(/\/reloaded\/reloaded.js/, '')
 
-    # find all scripts / stylesheet elements with the vimfox data tag
+    # find all scripts / stylesheet elements with the reloaded data tag
     for element in document.getElementsByTagName('*')
-      fpath = element.getAttribute('data-vimfox-path')
+      fpath = element.getAttribute('data-reloaded-path')
       if fpath?
-        vimfox.files[fpath] = element
+        reloaded.files[fpath] = element
 
     # inject io if not in namespace
     if not io?
       s = document.createElement('script')
       s.type = 'text/javascript'
       s.onload = ->
-        vimfox.setupSockets()
-      s.src = "#{vimfox.globals.host}/vimfox/socket.io.min.js"
+        reloaded.setupSockets()
+      s.src = "#{reloaded.globals.host}/reloaded/socket.io.min.js"
       document.body.appendChild(s)
     else
-      vimfox.setupSockets()
+      reloaded.setupSockets()
 
-  vimfox.setupSockets = ->
-    console.log "'vimfox_standalone.coffee' :: 'window.onload' => 1"
-    socket = io.connect("#{vimfox.globals.host}/ws")
+  reloaded.setupSockets = ->
+    console.log "'reloaded_standalone.coffee' :: 'window.onload' => 1"
+    socket = io.connect("#{reloaded.globals.host}/ws")
 
     socket.on('connect', ->
-      vimfox.status.update(0, 'OK!')
+      reloaded.status.update(0, 'OK!')
     )
 
     socket.on('error', (e) ->
-      vimfox.status.update(2, e)
+      reloaded.status.update(2, e)
       console.error(e)
     )
 
     socket.on('disconnect', ->
-      vimfox.status.update(1, 'disconnected')
+      reloaded.status.update(1, 'disconnected')
       console.debug("socket disconnected")
     )
 
-    # tell vimfox what files to watch on the local filesystem
-    socket.emit('watch_files', Object.keys(vimfox.files))
+    # tell reloaded what files to watch on the local filesystem
+    socket.emit('watch_files', Object.keys(reloaded.files))
 
     # now listen for reload commands
     socket.on('reload', (fname) ->
-      f = vimfox.files[fname]
+      f = reloaded.files[fname]
       if f?
         # reload the file if its a stylesheet
         console.log f.tagName
@@ -73,12 +73,12 @@ namespace 'vimfox', (exports) ->
           location.reload()
     )
 
-  class vimfox.Status
+  class reloaded.Status
     constructor: ->
       d = document.createElement('div')
-      d.id = "vimfox_status"
+      d.id = "reloaded_status"
       document.body.appendChild(d)
-      @me = document.getElementById('vimfox_status')
+      @me = document.getElementById('reloaded_status')
       @update(1)
 
     update: (status_code=0, tooltip="") ->

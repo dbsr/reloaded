@@ -5,22 +5,22 @@ import os
 import subprocess
 
 
-class VimfoxPluginException(Exception):
+class ReloadedPluginException(Exception):
     pass
 
 
 class Plugin(object):
-    """Use this to override the default settings and to start / stop the vimfox
+    """Use this to override the default settings and to start / stop the reloaded
     server"""
 
     prc = None
 
-    # Default vimfox server settings.
+    # Default reloaded server settings.
     RUN_SERVER_PY = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'server', 'run.py')
-    vimfox_server_host = 'localhost'
-    vimfox_server_port = 9000
-    vimfox_debug = -1
-    vimfox_show_status = 0
+    reloaded_server_host = 'localhost'
+    reloaded_server_port = 9000
+    reloaded_debug = 0
+    reloaded_show_status = 1
 
     def start_server(self):
         if not self.poll():
@@ -28,13 +28,13 @@ class Plugin(object):
         try:
             self.prc = subprocess.Popen([
                 self.RUN_SERVER_PY,
-                '--host', self.vimfox_server_host,
-                '--port', str(self.vimfox_server_port),
-                '--debug', str(self.vimfox_debug),
-                '--show-status', str(self.vimfox_show_status)
+                '--host', self.reloaded_server_host,
+                '--port', str(self.reloaded_server_port),
+                '--debug', str(self.reloaded_debug),
+                '--show-status', str(self.reloaded_show_status)
             ])
         except OSError as e:
-            raise VimfoxPluginException(e)
+            raise ReloadedPluginException(e)
 
     def stop_server(self):
         # Make sure the server is (still) running.
@@ -42,7 +42,7 @@ class Plugin(object):
             try:
                 self.prc.kill()
             except OSError as e:
-                raise VimfoxPluginException(e)
+                raise ReloadedPluginException(e)
 
     def poll(self):
         return self.prc.poll() if self.prc else True
