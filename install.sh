@@ -10,7 +10,7 @@ then
 fi
 
 venv_dir=./venv_temp
-ext_dir=./server/ext
+ext_dir=./reloaded/server/ext
 
 if ! [[ -d $venv_dir ]] 
 then
