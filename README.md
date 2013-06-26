@@ -1,4 +1,4 @@
-vimfox-reloaded
+reloaded
 ===============
 
 wip
