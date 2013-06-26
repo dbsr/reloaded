@@ -82,7 +82,7 @@ def debug():
             <link rel="stylesheet" href="/reloaded/css/style3.css">
         </head>
         <body>
-            <script id="reloaded-script" rel="text/javascript" src="http://localhost:9000/reloaded/reloaded_standalone.js"></script>
+            <script id="reloaded-script" rel="text/javascript" src="http://localhost:9000/reloaded/reloaded.js"></script>
         </body>
         </html>""")
 
