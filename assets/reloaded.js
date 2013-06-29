@@ -30,12 +30,23 @@ namespace('reloaded', function(exports) {
   };
   reloaded.files = {};
   reloaded.init = function() {
-    var element, fpath, s, _i, _len, _ref;
+    var element, fpath, s, script, _i, _j, _len, _len1, _ref, _ref1;
     reloaded.status = new reloaded.Status();
-    reloaded.globals.host = document.getElementById('reloaded-script').getAttribute('src').replace(/\/reloaded\/reloaded.js/, '');
-    _ref = document.getElementsByTagName('*');
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      element = _ref[_i];
+    element = document.getElementById('reloaded-script');
+    if (element == null) {
+      _ref = document.getElementsByTagName("script");
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        script = _ref[_i];
+        if (script.getAttribute('src') && script.getAttribute('src').match(/reloaded.js/)) {
+          element = script;
+          break;
+        }
+      }
+    }
+    reloaded.globals.host = element.getAttribute('src').replace(/\/reloaded\/reloaded.js/, '');
+    _ref1 = document.getElementsByTagName('*');
+    for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+      element = _ref1[_j];
       fpath = element.getAttribute('data-reloaded-path');
       if (fpath != null) {
         reloaded.files[fpath] = element;

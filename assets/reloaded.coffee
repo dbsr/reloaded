@@ -19,8 +19,14 @@ namespace 'reloaded', (exports) ->
     reloaded.status = new reloaded.Status()
 
     # get reloaded host information
-    reloaded.globals.host = document.getElementById('reloaded-script')
-      .getAttribute('src').replace(/\/reloaded\/reloaded.js/, '')
+    element = document.getElementById('reloaded-script')
+    unless element?
+      for script in document.getElementsByTagName("script")
+        if script.getAttribute('src') and script.getAttribute('src').match(/reloaded.js/)
+          element = script
+          break
+    reloaded.globals.host = element.getAttribute('src')
+      .replace(/\/reloaded\/reloaded.js/, '')
 
     # find all scripts / stylesheet elements with the reloaded data tag
     for element in document.getElementsByTagName('*')

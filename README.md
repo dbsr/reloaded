@@ -29,7 +29,7 @@ The reloaded server communicates with your browser using websockets.
 Add the following script to the page to enable them:
 
  ```html
-  <script src="http://localhost:9000/reloaded/reloaded.js" id="reloaded-script" />
+  <script src="http://localhost:9000/reloaded/reloaded.js" id="reloaded-script">
   
  ```
  
