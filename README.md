@@ -23,7 +23,7 @@
  reload the file (when it is a css file) or reload the page.
  
  
-###Adding the reloader script to the page
+###Add the reloader script to the page
 
 The reloader server communicates with your browser using websockets.
 Add the following script to the page to enable them:
@@ -33,7 +33,7 @@ Add the following script to the page to enable them:
   
  ```
  
- ###Use the special data tag to specify which files Reloader should monitor
+###Use the special data tag to specify which files Reloader should monitor
  
  After reloader.js has been loaded it will go through the page's DOM and
  look for elements with this data tag:
@@ -64,9 +64,3 @@ $ ./reloader.py --help
 ```
 
 for more configuration options
-
-
-###Plugin support
-
-As a proof of concept I wrote a very simple vim plugin. Look here
-for more information: [vim-reloader](https://github.com/dbsr/vim-reloader)
