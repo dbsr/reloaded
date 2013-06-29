@@ -23,44 +23,44 @@
  reload the file (when it is a css file) or reload the page.
  
  
-###Add the reloader script to the page
+###Add the reloaded script to the page
 
-The reloader server communicates with your browser using websockets.
+The reloaded server communicates with your browser using websockets.
 Add the following script to the page to enable them:
 
  ```html
-  <script src="http://localhost:9000/reloader/reloader.js" id="reloader-script" />
+  <script src="http://localhost:9000/reloaded/reloaded.js" id="reloaded-script" />
   
  ```
  
-###Use the special data tag to specify which files Reloader should monitor
+###Use the special data tag to specify which files reloaded should monitor
  
- After reloader.js has been loaded it will go through the page's DOM and
+ After reloaded.js has been loaded it will go through the page's DOM and
  look for elements with this data tag:
  
- 	data-reloader-path='/path/to/file'
+ 	data-reloaded-path='/path/to/file'
 
 Reloaded won't work if it cannot find the file so make sure you only use absolute paths.
   
  ```html
  <!-- Example 1: -->
- <link href="/css/style.css" rel="stylesheet" data-reloader-path="/path/to/file" />
+ <link href="/css/style.css" rel="stylesheet" data-reloaded-path="/path/to/file" />
  
  <!-- Example 2: The html page itself: -->
- <html data-reloader-path="/abs/path/to/example.html">
+ <html data-reloaded-path="/abs/path/to/example.html">
 
 ```
 
-###Running the reloader server
+###Running the reloaded server
 
 ```bash
-$ ./reloader.py 
+$ ./reloaded.py 
 ```
 
 Run:
 
 ```bash
-$ ./reloader.py --help
+$ ./reloaded.py --help
 ```
 
 for more configuration options
