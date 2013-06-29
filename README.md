@@ -39,8 +39,9 @@ Add the following script to the page to enable them:
  look for elements with this data tag:
  
  	data-reloaded-path='/path/to/file'
-
-Reloaded won't work if it cannot find the file so make sure you only use absolute paths.
+ 
+ For reloaded's file monitor to work you need to specify the full, absolute
+ path to the file here.
   
  ```html
  <!-- Example 1: -->
