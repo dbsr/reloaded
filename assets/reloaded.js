@@ -84,16 +84,29 @@ namespace('reloaded', function(exports) {
   };
   return reloaded.Status = (function() {
     function Status() {
-      var d;
+      var d, k, v, _ref;
       d = document.createElement('div');
       d.id = "reloaded_status";
       document.body.appendChild(d);
       this.me = document.getElementById('reloaded_status');
+      _ref = {
+        position: 'absolute',
+        height: '15px',
+        width: '15px',
+        margin: '15px',
+        top: '0',
+        right: '0',
+        zIndex: '999999'
+      };
+      for (k in _ref) {
+        v = _ref[k];
+        this.me.style[k] = v;
+      }
       this.update(1);
     }
 
     Status.prototype.update = function(status_code, tooltip) {
-      var k, status_color, v, _ref;
+      var status_color;
       if (status_code == null) {
         status_code = 0;
       }
@@ -101,19 +114,7 @@ namespace('reloaded', function(exports) {
         tooltip = "";
       }
       status_color = ['green', 'orange', 'red'][status_code];
-      _ref = {
-        position: 'absolute',
-        height: '10px',
-        width: '10px',
-        margin: '10px',
-        top: '0',
-        right: '0',
-        backgroundColor: status_color
-      };
-      for (k in _ref) {
-        v = _ref[k];
-        this.me.style[k] = v;
-      }
+      this.me.style['backgroundColor'] = status_color;
       return this.me.title = tooltip;
     };
 

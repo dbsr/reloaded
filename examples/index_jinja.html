@@ -1,0 +1,17 @@
+{% set reloaded_base_path = "/home/dbsr/src/project" %}
+{% macro reloaded_data_tag(fpath) %}
+{% if debug %}
+data-reloaded-path="{{ reloaded_base_path }}/{{ fpath }}"
+{% endif %}
+{% endmacro %}
+<!doctype html>
+<html class="no-js" {{ reloaded_data_tag("templates/index.html") }}>
+  <head>
+    <title></title>
+    <link rel="stylesheet" href="/assets/styles/main.css" {{ reloaded_data_tag("/assets/styles/main.css") }}>
+  </head>
+  <body>
+    <script src="/assets/scripts/main.js" {{ reloaded_data_tag("assets/scripts/main.js") }}></script>
+    <script src="http://localhost:9000/reloaded/reloaded.js" id="reloaded-script"></script>
+  </body>
+</html>

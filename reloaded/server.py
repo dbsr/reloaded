@@ -2,22 +2,26 @@
 # dydrmntion@gmail.com ~ 2013
 
 import os
-import threading
 
 from socketio import socketio_manage
 from socketio.namespace import BaseNamespace
 from flask import Flask, send_file, Response, request
 
+
+from monitor import FileMonitor
+
+
 app = Flask(__name__)
 
-app.reloaded = {}
+app.reloaded = {
+    'filemonitor': FileMonitor()
+}
 
 
 @app.route('/reloaded/<path:filename>')
 def send_reloaded_file(filename):
-    app.logger.info(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'assets', filename))
     try:
-        return send_file(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'assets', filename))
+        return send_file(os.path.join(os.path.dirname(os.path.abspath(__file__)), '../assets', filename))
     except:
         return Response(':(', status=404)
 
@@ -48,10 +52,7 @@ class ReloadedNamespace(BaseNamespace):
 
     def on_watch_files(self, files):
         self.log("new watch files: " + ", ".join(files))
-        app.reloaded['watch_files'] = files
-        init_watch()
-
-        return True
+        app.reloaded['filemonitor'].watch_files(self, files)
 
     @classmethod
     def socketio_send(self, event, data):
@@ -83,34 +84,3 @@ def debug():
             <script id="reloaded-script" rel="text/javascript" src="http://localhost:9000/reloaded/reloaded.js"></script>
         </body>
         </html>""")
-
-
-t_event = None
-
-
-def init_watch():
-    global t_event
-    try:
-        t_event.set()
-    except:
-        pass
-    if not app.reloaded['watch_files']:
-        return
-    t_event = threading.Event()
-    t = threading.Thread(target=watch, args=(t_event,))
-    t.start()
-
-
-def watch(stop_event):
-    mtimes = {}
-    while not stop_event.is_set():
-        for f in app.reloaded['watch_files']:
-            if not os.path.exists(f):
-                print "could not stat: {!r}.".format(f)
-                continue
-            old_mtime = mtimes.get(f)
-            new_mtime = os.stat(f).st_mtime
-            if old_mtime and old_mtime != new_mtime:
-                ReloadedNamespace.socketio_send('reload', f)
-            mtimes[f] = os.stat(f).st_mtime
-        stop_event.wait(1)
