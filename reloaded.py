@@ -9,7 +9,6 @@ import argparse
 
 _here = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.join(_here, 'lib'))
-print _here
 
 from socketio.server import SocketIOServer
 from gevent import monkey
