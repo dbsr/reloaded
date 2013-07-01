@@ -1,4 +1,4 @@
-#!/home/dbsr/.virtualenvs/wtf/bin/python2
+#!/usr/bin/env python2.7
 # -*- coding: utf-8 -*-
 # dydrmntion@gmail.com ~ 2013
 
